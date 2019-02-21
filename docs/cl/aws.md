@@ -1,6 +1,6 @@
 # AWS
 
-In this tutorial, we'll create a Kubernetes v1.13.1 cluster on AWS with Container Linux.
+In this tutorial, we'll create a Kubernetes v1.13.3 cluster on AWS with Container Linux.
 
 We'll declare a Kubernetes cluster using the Typhoon Terraform module. Then apply the changes to create a VPC, gateway, subnets, security groups, controller instances, worker auto-scaling group, network load balancer, and TLS assets.
 
@@ -92,7 +92,7 @@ Define a Kubernetes cluster using the module `aws/container-linux/kubernetes`.
 
 ```tf
 module "aws-tempest" {
-  source = "git::https://github.com/poseidon/typhoon//aws/container-linux/kubernetes?ref=v1.13.1"
+  source = "git::https://github.com/poseidon/typhoon//aws/container-linux/kubernetes?ref=v1.13.3"
 
   providers = {
     aws = "aws.default"
@@ -113,7 +113,7 @@ module "aws-tempest" {
 
   # optional
   worker_count = 2
-  worker_type  = "t2.medium"
+  worker_type  = "t3.small"
 }
 ```
 
@@ -165,9 +165,9 @@ In 4-8 minutes, the Kubernetes cluster will be ready.
 $ export KUBECONFIG=/home/user/.secrets/clusters/tempest/auth/kubeconfig
 $ kubectl get nodes
 NAME           STATUS  ROLES              AGE  VERSION
-ip-10-0-3-155  Ready   controller,master  10m  v1.13.1
-ip-10-0-26-65  Ready   node               10m  v1.13.1
-ip-10-0-41-21  Ready   node               10m  v1.13.1
+ip-10-0-3-155  Ready   controller,master  10m  v1.13.3
+ip-10-0-26-65  Ready   node               10m  v1.13.3
+ip-10-0-41-21  Ready   node               10m  v1.13.3
 ```
 
 List the pods.
@@ -194,7 +194,7 @@ kube-system   pod-checkpointer-4kxtl-ip-10-0-3-155      1/1    Running   0      
 
 ## Going Further
 
-Learn about [maintenance](/topics/maintenance) and [addons](/addons/overview).
+Learn about [maintenance](/topics/maintenance/) and [addons](/addons/overview/).
 
 !!! note
     On Container Linux clusters, install the `CLUO` addon to coordinate reboots and drains when nodes auto-update. Otherwise, updates may not be applied until the next reboot.

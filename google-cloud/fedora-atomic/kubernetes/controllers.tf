@@ -31,9 +31,10 @@ locals {
 resource "google_compute_instance" "controllers" {
   count = "${var.controller_count}"
 
-  name         = "${var.cluster_name}-controller-${count.index}"
-  zone         = "${element(local.zones, count.index)}"
-  machine_type = "${var.controller_type}"
+  name             = "${var.cluster_name}-controller-${count.index}"
+  zone             = "${element(local.zones, count.index)}"
+  machine_type     = "${var.controller_type}"
+  min_cpu_platform = "Intel Haswell"
 
   metadata {
     user-data = "${element(data.template_file.controller-cloudinit.*.rendered, count.index)}"
@@ -79,10 +80,10 @@ data "template_file" "controller-cloudinit" {
     # etcd0=https://cluster-etcd0.example.com,etcd1=https://cluster-etcd1.example.com,...
     etcd_initial_cluster = "${join(",", data.template_file.etcds.*.rendered)}"
 
-    kubeconfig            = "${indent(6, module.bootkube.kubeconfig)}"
-    ssh_authorized_key    = "${var.ssh_authorized_key}"
-    k8s_dns_service_ip    = "${cidrhost(var.service_cidr, 10)}"
-    cluster_domain_suffix = "${var.cluster_domain_suffix}"
+    kubeconfig             = "${indent(6, module.bootkube.kubeconfig-kubelet)}"
+    ssh_authorized_key     = "${var.ssh_authorized_key}"
+    cluster_dns_service_ip = "${cidrhost(var.service_cidr, 10)}"
+    cluster_domain_suffix  = "${var.cluster_domain_suffix}"
   }
 }
 
